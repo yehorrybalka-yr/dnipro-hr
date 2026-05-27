@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Анкета: Спеціаліст онлайн-підтримки</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2b3574;
+            --primary-hover: #1e2658;
+            --bg-dark: #0a0a0a;
+            --text-light: #ffffff;
+            --text-muted: #e0e0e0;
+            --glass-bg: rgba(20, 20, 25, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --danger: #dc3545;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), 
+                        url('https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=2072&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: var(--text-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .step.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Start Page Styles */
+        .location-badge {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 15px rgba(43, 53, 116, 0.4);
+        }
+
+        h1.main-title {
+            font-size: 2.8rem;
+            font-weight: 900;
+            line-height: 1.05;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            margin-bottom: 35px;
+            color: var(--text-muted);
+        }
+
+        /* Question Styles */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        h2.question-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            line-height: 1.4;
+            text-align: left;
+            width: 100%;
+        }
+
+        .options-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Buttons & Inputs */
+        .btn-primary {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 18px 20px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 20px rgba(43, 53, 116, 0.4);
+        }
+
+        .btn-primary:hover, .btn-primary:active {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-option {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 16px 20px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .btn-option:hover, .btn-option:active {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-back {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.3);
+            margin-top: 15px;
+        }
+
+        .btn-back:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        input.form-control {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 18px 20px;
+            font-size: 1.1rem;
+            border-radius: 12px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input.form-control:focus {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        input.form-control::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .disclaimer {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 20px;
+        }
+
+        /* Specific screens */
+        .icon-large {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .rejected-text {
+            color: #ff6b6b;
+        }
+
+        @media (max-width: 400px) {
+            h1.main-title { font-size: 2.2rem; }
+            .quiz-container { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        
+        <!-- Progress Bar (Hidden on start, success, reject screens) -->
+        <div class="progress-bar" id="progressBarContainer">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <!-- START PAGE -->
+        <div id="step-0" class="step active">
+            <div class="location-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                Дніпро, Недістанційно
+            </div>
+            <h1 class="main-title">СПЕЦІАЛІСТ<br>ОНЛАЙН-ПІДТРИМКИ</h1>
+            <p class="subtitle">Шукаємо відповідальну та амбітну людину. Досвід необов'язково.</p>
+            <button class="btn-primary" onclick="startQuiz()">ЗАПОВНЮЙ АНКЕТУ</button>
+            <div class="disclaimer">*це займе 2-3 хвилини</div>
+        </div>
+
+        <!-- QUESTION 1 -->
+        <div id="step-1" class="step">
+            <h2 class="question-text">1. Наскільки вам комфортно спілкуватися з людьми?</h2>
+            <div class="options-container">
+                <button class="btn-option" onclick="nextStep(2, 'q1', 'Легко знаходжу спільну мову')">Легко знаходжу спільну мову</button>
+                <button class="btn-option" onclick="nextStep(2, 'q1', 'Нормально')">Нормально</button>
+                <button class="btn-option" onclick="nextStep(2, 'q1', 'Не дуже люблю спілкування')">Не дуже люблю спілкування</button>
+            </div>
+        </div>
+
+        <!-- QUESTION 2 -->
+        <div id="step-2" class="step">
+            <h2 class="question-text">2. Чи був у вас досвід у сфері комунікації з людьми?</h2>
+            <div class="options-container">
+                <button class="btn-option" onclick="nextStep(3, 'q2', 'Так')">Так</button>
+                <button class="btn-option" onclick="nextStep(3, 'q2', 'Ні')">Ні</button>
+            </div>
+        </div>
+
+        <!-- QUESTION 3 (Triggers Logic) -->
+        <div id="step-3" class="step">
+            <h2 class="question-text">3. Чи готові ви працювати офлайн (НЕ дістанційно)?</h2>
+            <div class="options-container">
+                <button class="btn-option" onclick="handleOfflineAnswer('Так')">Так</button>
+                <button class="btn-option" onclick="handleOfflineAnswer('Ні')">Ні</button>
+            </div>
+        </div>
+
+        <!-- QUESTION 4 -->
+        <div id="step-4" class="step">
+            <h2 class="question-text">4. Скільки вам років?</h2>
+            <div class="input-group">
+                <input type="number" id="input-age" class="form-control" placeholder="Введіть ваш вік" required>
+            </div>
+            <button class="btn-primary" onclick="validateAndNext(5, 'input-age', 'q4')">Далі</button>
+        </div>
+
+        <!-- QUESTION 5 -->
+        <div id="step-5" class="step">
+            <h2 class="question-text">5. Telegram для звʼязку</h2>
+            <div class="input-group">
+                <input type="text" id="input-tg" class="form-control" placeholder="@username або номер" required>
+            </div>
+            <button class="btn-primary" onclick="validateAndNext(6, 'input-tg', 'q5')">Далі</button>
+        </div>
+
+        <!-- QUESTION 6 -->
+        <div id="step-6" class="step">
+            <h2 class="question-text">6. Як вас звати?</h2>
+            <div class="input-group">
+                <input type="text" id="input-name" class="form-control" placeholder="Ваше ім'я" required>
+            </div>
+            <button class="btn-primary" onclick="validateAndNext(7, 'input-name', 'q6')">Далі</button>
+        </div>
+
+        <!-- QUESTION 7 -->
+        <div id="step-7" class="step">
+            <h2 class="question-text">7. Номер телефону</h2>
+            <div class="input-group">
+                <input type="tel" id="input-phone" class="form-control" placeholder="+380..." required>
+            </div>
+            <button class="btn-primary" onclick="submitQuiz()">Завершити</button>
+        </div>
+
+        <!-- REJECTED PAGE -->
+        <div id="step-reject" class="step">
+            <div class="icon-large">🏢</div>
+            <h2 class="question-text text-center rejected-text" style="text-align: center;">На жаль, ми вам не підходимо</h2>
+            <p class="subtitle" style="text-align: center; color: white;">Нам потрібен кандидат, який готовий працювати виключно офлайн у нашому офісі в Дніпрі.</p>
+            <button class="btn-primary btn-back" onclick="goToStep(3)">Повернутися до питання</button>
+        </div>
+
+        <!-- SUCCESS PAGE -->
+        <div id="step-success" class="step">
+            <div class="icon-large">✅</div>
+            <h2 class="question-text text-center" style="text-align: center; margin-bottom: 10px;">Дякуємо!</h2>
+            <p class="subtitle" style="text-align: center; color: white;">Ваша анкета успішно відправлена.<br>Наш HR-менеджер зв'яжеться з вами найближчим часом у Telegram або по телефону.</p>
+        </div>
+
+    </div>
+
+    <script>
+        const totalQuestions = 7;
+        let answers = {};
+
+        function updateProgress(step) {
+            const progressContainer = document.getElementById('progressBarContainer');
+            if (step >= 1 && step <= totalQuestions) {
+                progressContainer.style.display = 'block';
+                const percentage = ((step - 1) / totalQuestions) * 100;
+                document.getElementById('progressBar').style.width = percentage + '%';
+            } else {
+                progressContainer.style.display = 'none';
+            }
+        }
+
+        function hideAllSteps() {
+            document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+        }
+
+        function goToStep(stepId) {
+            hideAllSteps();
+            document.getElementById(`step-${stepId}`).classList.add('active');
+            updateProgress(stepId);
+        }
+
+        function startQuiz() {
+            goToStep(1);
+        }
+
+        function nextStep(nextId, questionKey, answerValue) {
+            if (questionKey && answerValue) {
+                answers[questionKey] = answerValue;
+            }
+            goToStep(nextId);
+        }
+
+        function handleOfflineAnswer(answer) {
+            answers['q3'] = answer;
+            if (answer === 'Ні') {
+                goToStep('reject');
+            } else {
+                goToStep(4);
+            }
+        }
+
+        function validateAndNext(nextId, inputId, questionKey) {
+            const input = document.getElementById(inputId);
+            if (input.value.trim() === '') {
+                // simple highlight for error
+                input.style.borderColor = 'var(--danger)';
+                setTimeout(() => input.style.borderColor = 'rgba(255, 255, 255, 0.2)', 1000);
+                return;
+            }
+            answers[questionKey] = input.value.trim();
+            goToStep(nextId);
+        }
+
+        function submitQuiz() {
+            const input = document.getElementById('input-phone');
+            if (input.value.trim() === '') {
+                input.style.borderColor = 'var(--danger)';
+                setTimeout(() => input.style.borderColor = 'rgba(255, 255, 255, 0.2)', 1000);
+                return;
+            }
+            answers['q7'] = input.value.trim();
+            
+            // Here you would typically send 'answers' object to your backend/CRM via fetch()
+            console.log("Form Data Submitted:", answers);
+            
+            // Show success screen and complete progress bar
+            document.getElementById('progressBar').style.width = '100%';
+            setTimeout(() => {
+                goToStep('success');
+            }, 300);
+        }
+    </script>
+</body>
+</html>
