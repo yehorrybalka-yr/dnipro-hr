@@ -240,6 +240,15 @@
             color: #ff6b6b;
         }
 
+        .error-text {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+            text-align: left;
+            width: 100%;
+        }
+
         @media (max-width: 400px) {
             h1.main-title { font-size: 2.2rem; }
             .quiz-container { padding: 30px 20px; }
@@ -318,6 +327,7 @@
             <h2 class="question-text">7. Номер телефону</h2>
             <div class="input-group">
                 <input type="tel" id="input-phone" class="form-control" placeholder="+380..." required>
+                <div id="phone-error" class="error-text">Введіть коректний номер (напр. +380501234567)</div>
             </div>
             <button class="btn-primary" onclick="submitQuiz()">Завершити</button>
         </div>
@@ -332,7 +342,7 @@
         <div id="step-success" class="step">
             <div class="icon-large">✅</div>
             <h2 class="question-text text-center" style="text-align: center; margin-bottom: 10px;">Дякуємо!</h2>
-            <p class="subtitle" style="text-align: center; color: white;">Ваша анкета успішно відправлена.<br>Наш HR-менеджер зв'яжеться з вами найближчим часом у Telegram або по телефону.</p>
+            <p class="subtitle" style="text-align: center; color: white;">Ваша анкета успішно відправлена.<br>Наш HR-менеджер зв'яжеться з вами найближчим часом.</p>
         </div>
 
     </div>
@@ -395,20 +405,49 @@
 
         function submitQuiz() {
             const input = document.getElementById('input-phone');
-            if (input.value.trim() === '') {
+            const errorText = document.getElementById('phone-error');
+            let phoneVal = input.value.trim();
+            
+            // Валидация телефона (убираем пробелы, тире и скобки)
+            const cleanPhone = phoneVal.replace(/[\s\-\(\)]/g, '');
+            // Проверка: формат UA номеров (+380, 380 или 0 в начале и ровно 9 цифр после нуля)
+            const phoneRegex = /^(?:\+380|380|0)\d{9}$/;
+
+            if (!phoneRegex.test(cleanPhone)) {
                 input.style.borderColor = 'var(--danger)';
-                setTimeout(() => input.style.borderColor = 'rgba(255, 255, 255, 0.2)', 1000);
+                errorText.style.display = 'block';
+                
+                setTimeout(() => {
+                    input.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    errorText.style.display = 'none';
+                }, 2500);
                 return;
             }
-            answers['q7'] = input.value.trim();
+
+            answers['q7'] = cleanPhone;
             
-            // Отбиваем ивент Лида в FB Пиксель
+            // 1. Отбиваем ивент Лида в FB Пиксель
             if (typeof fbq === 'function') {
                 fbq('track', 'Lead');
             }
+
+            // ============================================
+            // 2. ВСТАВЬ СЮДА URL ИЗ GOOGLE APPS SCRIPT
+            // ============================================
+            const scriptURL = 'ТВОЙ_URL_ВЕБ_ПРИЛОЖЕНИЯ_GOOGLE_APPS_SCRIPT';
             
-            console.log("Form Data Submitted:", answers);
+            // Отправляем данные в Google Таблицу
+            fetch(scriptURL, {
+                method: 'POST',
+                // Отправляем как текст, чтобы не было конфликтов CORS
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(answers)
+            })
+            .then(response => response.json())
+            .then(data => console.log('Успех:', data))
+            .catch(error => console.error('Ошибка:', error));
             
+            // Переводим на страницу "Спасибо"
             document.getElementById('progressBar').style.width = '100%';
             setTimeout(() => {
                 goToStep('success');
