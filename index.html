@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Анкета: Спеціаліст онлайн-підтримки</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '965652069700010');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=965652069700010&ev=PageView&noscript=1"
+    /></noscript>
     <style>
         :root {
             --primary: #2b3574;
@@ -67,7 +83,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Start Page Styles */
         .location-badge {
             background: var(--primary);
             color: white;
@@ -100,7 +115,6 @@
             color: var(--text-muted);
         }
 
-        /* Question Styles */
         .progress-bar {
             width: 100%;
             height: 6px;
@@ -134,7 +148,6 @@
             gap: 12px;
         }
 
-        /* Buttons & Inputs */
         .btn-primary {
             width: 100%;
             background: var(--primary);
@@ -218,7 +231,6 @@
             margin-top: 20px;
         }
 
-        /* Specific screens */
         .icon-large {
             font-size: 4rem;
             margin-bottom: 20px;
@@ -238,12 +250,10 @@
 
     <div class="quiz-container">
         
-        <!-- Progress Bar (Hidden on start, success, reject screens) -->
         <div class="progress-bar" id="progressBarContainer">
             <div class="progress-fill" id="progressBar"></div>
         </div>
 
-        <!-- START PAGE -->
         <div id="step-0" class="step active">
             <div class="location-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
@@ -255,7 +265,6 @@
             <div class="disclaimer">*це займе 2-3 хвилини</div>
         </div>
 
-        <!-- QUESTION 1 -->
         <div id="step-1" class="step">
             <h2 class="question-text">1. Наскільки вам комфортно спілкуватися з людьми?</h2>
             <div class="options-container">
@@ -265,7 +274,6 @@
             </div>
         </div>
 
-        <!-- QUESTION 2 -->
         <div id="step-2" class="step">
             <h2 class="question-text">2. Чи був у вас досвід у сфері комунікації з людьми?</h2>
             <div class="options-container">
@@ -274,7 +282,6 @@
             </div>
         </div>
 
-        <!-- QUESTION 3 (Triggers Logic) -->
         <div id="step-3" class="step">
             <h2 class="question-text">3. Чи готові ви працювати офлайн (НЕ дістанційно)?</h2>
             <div class="options-container">
@@ -283,7 +290,6 @@
             </div>
         </div>
 
-        <!-- QUESTION 4 -->
         <div id="step-4" class="step">
             <h2 class="question-text">4. Скільки вам років?</h2>
             <div class="input-group">
@@ -292,7 +298,6 @@
             <button class="btn-primary" onclick="validateAndNext(5, 'input-age', 'q4')">Далі</button>
         </div>
 
-        <!-- QUESTION 5 -->
         <div id="step-5" class="step">
             <h2 class="question-text">5. Telegram для звʼязку</h2>
             <div class="input-group">
@@ -301,7 +306,6 @@
             <button class="btn-primary" onclick="validateAndNext(6, 'input-tg', 'q5')">Далі</button>
         </div>
 
-        <!-- QUESTION 6 -->
         <div id="step-6" class="step">
             <h2 class="question-text">6. Як вас звати?</h2>
             <div class="input-group">
@@ -310,7 +314,6 @@
             <button class="btn-primary" onclick="validateAndNext(7, 'input-name', 'q6')">Далі</button>
         </div>
 
-        <!-- QUESTION 7 -->
         <div id="step-7" class="step">
             <h2 class="question-text">7. Номер телефону</h2>
             <div class="input-group">
@@ -319,7 +322,6 @@
             <button class="btn-primary" onclick="submitQuiz()">Завершити</button>
         </div>
 
-        <!-- REJECTED PAGE -->
         <div id="step-reject" class="step">
             <div class="icon-large">🏢</div>
             <h2 class="question-text text-center rejected-text" style="text-align: center;">На жаль, ми вам не підходимо</h2>
@@ -327,7 +329,6 @@
             <button class="btn-primary btn-back" onclick="goToStep(3)">Повернутися до питання</button>
         </div>
 
-        <!-- SUCCESS PAGE -->
         <div id="step-success" class="step">
             <div class="icon-large">✅</div>
             <h2 class="question-text text-center" style="text-align: center; margin-bottom: 10px;">Дякуємо!</h2>
@@ -384,7 +385,6 @@
         function validateAndNext(nextId, inputId, questionKey) {
             const input = document.getElementById(inputId);
             if (input.value.trim() === '') {
-                // simple highlight for error
                 input.style.borderColor = 'var(--danger)';
                 setTimeout(() => input.style.borderColor = 'rgba(255, 255, 255, 0.2)', 1000);
                 return;
@@ -402,10 +402,13 @@
             }
             answers['q7'] = input.value.trim();
             
-            // Here you would typically send 'answers' object to your backend/CRM via fetch()
+            // Отбиваем ивент Лида в FB Пиксель
+            if (typeof fbq === 'function') {
+                fbq('track', 'Lead');
+            }
+            
             console.log("Form Data Submitted:", answers);
             
-            // Show success screen and complete progress bar
             document.getElementById('progressBar').style.width = '100%';
             setTimeout(() => {
                 goToStep('success');
