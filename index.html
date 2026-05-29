@@ -304,7 +304,7 @@
             <div class="input-group">
                 <input type="number" id="input-age" class="form-control" placeholder="Введіть ваш вік" required>
             </div>
-            <button class="btn-primary" onclick="validateAndNext(5, 'input-age', 'q4')">Далі</button>
+            <button class="btn-primary" onclick="validateAgeAndNext(5, 'input-age', 'q4')">Далі</button>
         </div>
 
         <div id="step-5" class="step">
@@ -337,6 +337,13 @@
             <h2 class="question-text text-center rejected-text" style="text-align: center;">На жаль, ми вам не підходимо</h2>
             <p class="subtitle" style="text-align: center; color: white;">Нам потрібен кандидат, який готовий працювати виключно офлайн у нашому офісі в Дніпрі.</p>
             <button class="btn-primary btn-back" onclick="goToStep(3)">Повернутися до питання</button>
+        </div>
+
+        <div id="step-reject-age" class="step">
+            <div class="icon-large">👤</div>
+            <h2 class="question-text text-center rejected-text" style="text-align: center;">На жаль, ми вам не підходимо</h2>
+            <p class="subtitle" style="text-align: center; color: white;">Наразі ми розглядаємо кандидатів віком від 17 до 35 років.</p>
+            <button class="btn-primary btn-back" onclick="goToStep(4)">Повернутися до питання</button>
         </div>
 
         <div id="step-success" class="step">
@@ -401,6 +408,26 @@
             }
             answers[questionKey] = input.value.trim();
             goToStep(nextId);
+        }
+
+        function validateAgeAndNext(nextId, inputId, questionKey) {
+            const input = document.getElementById(inputId);
+            const ageStr = input.value.trim();
+
+            if (ageStr === '') {
+                input.style.borderColor = 'var(--danger)';
+                setTimeout(() => input.style.borderColor = 'rgba(255, 255, 255, 0.2)', 1000);
+                return;
+            }
+
+            const age = parseInt(ageStr, 10);
+            answers[questionKey] = age;
+
+            if (age < 17 || age > 35) {
+                goToStep('reject-age');
+            } else {
+                goToStep(nextId);
+            }
         }
 
         function submitQuiz() {
